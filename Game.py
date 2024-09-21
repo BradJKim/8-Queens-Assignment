@@ -7,11 +7,15 @@ class Game(object):
     def __init__(self):
         global POPULATION_SIZE
         self.generation = 1 
+        self.found = False
         self.population = []
         
         for i in range(POPULATION_SIZE):
             gnome = Individual()
             self.population.append(gnome)
+
+    def is_found(self):
+        return self.found
 
     def reset_game(self):
         global POPULATION_SIZE
@@ -22,6 +26,7 @@ class Game(object):
             new_population.append(gnome)
 
         self.population = new_population
+        self.found = False
         self.generation = 1
 
     def next_gen(self):
@@ -31,11 +36,13 @@ class Game(object):
 
         if curr_population[0].fitness <= 0:
             print("Generation: {}\tString: {}\tFitness:  {}".format(self.generation, curr_population[0].board, curr_population[0].fitness))
-            return True
+            self.found = True
+            self.population = curr_population
+            return curr_population[0]
             
         new_generation = []
 
-        s = int((20*POPULATION_SIZE)/100)
+        s = int((10*POPULATION_SIZE)/100)
         new_generation.extend(curr_population[:s])
 
         s = int((POPULATION_SIZE)/2)
@@ -53,6 +60,6 @@ class Game(object):
         self.generation += 1
         self.population = curr_population
 
-        return False
+        return curr_population[0]
 
     
