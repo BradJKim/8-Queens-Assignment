@@ -12,14 +12,12 @@ def main():
 
     for i in range(POPULATION_SIZE):
         gnome = Individual()
-        gnome.create_gnome()
         population.append(gnome)
 
     while not found:
         population = sorted(population, key = lambda x:x.fitness)
 
         if population[0].fitness <= 0:
-            print(population[0].chromosome)
             found = True
             break
 
@@ -38,11 +36,11 @@ def main():
 
         population = new_generation
 
-        print("Generation: {}\tString: {}\tFitness:  {}".format(generation, "".join(population[0].chromosome),population[0].fitness))
+        print("Generation: {}\tString: {}\tFitness:  {}".format(generation, population[0].board,population[0].fitness))
 
         generation += 1
 
-    print("Generation: {}\tString: {}\tFitness: {}".format(generation, "".join(population[0].chromosome), population[0].fitness)) 
+    print("Generation: {}\tString: {}\tFitness: {}".format(generation, population[0].board, population[0].fitness)) 
   
 if __name__ == '__main__': 
     main() 

@@ -1,46 +1,48 @@
 import random
 
-GENES = '''abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOP 
-QRSTUVWXYZ 1234567890, .-;:_!"#%&/()=?@${[]}'''
-
-TARGET = "I love GeeksforGeeks"
-
+# Index = Row, Value = Column
 class Individual(object):
-    def __init__(self, chromosome = None):
-        if(chromosome):
-            self.chromosome = chromosome 
+    def __init__(self, board = None):
+        if(board):
+            self.board = board 
         else:
-            self.chromosome = self.create_gnome()
+            self.board = self.create_board()
 
         self.fitness = self.cal_fitness()
 
-    def mutated_genes(self):
-        global GENES
-        gene = random.choice(GENES)
-        return gene
+    def mutate_col(self):
+        return int(random.random() * 8)
     
-    def create_gnome(self):
-        global TARGET
-        gnome_len = len(TARGET)
-        return [self.mutated_genes() for _ in range(gnome_len)]
+    def create_board(self):
+        gnome_len = 8
+        return [self.mutate_col() for i in range(gnome_len)]
     
     def mate(self, par2):
-        child_chromosome = []
-        for gp1, gp2 in zip(self.chromosome, par2.chromosome):
+        new_board = []
+        for row in range(8):
             prob = random.random()
 
-            if prob < 0.45:
-                child_chromosome.append(gp1)
-            elif prob < 0.9:
-                child_chromosome.append(gp2)
+            if prob < 0.375:
+                new_board.append(self.board[row])
+            elif prob < 0.75:
+                new_board.append(par2.board[row])
             else:
-                child_chromosome.append(self.mutated_genes())
+                new_board.append(self.mutate_col())
         
-        return Individual(child_chromosome)
+        return Individual(new_board)
     
     def cal_fitness(self):
-        global TARGET
+        board = self.board
         fitness = 0
-        for gs, gt in zip(self.chromosome, TARGET):
-            if gs != gt: fitness += 1
+
+        # check for same columns or diagonals using slope between points
+        for row1 in range(8):
+            for row2 in range(row1+1, 8):
+                col1 = board[row1]
+                col2 = board[row2]
+                if(col1 == col2):
+                    fitness += 1
+                elif( abs((row2 - row1) / (col2 - col1)) == 1 ): 
+                    fitness += 1
+
         return fitness
