@@ -22,9 +22,9 @@ class Individual(object):
         for row in range(8):
             prob = random.random()
 
-            if prob < 0.375:
+            if prob < 0.45:
                 new_board.append(self.board[row])
-            elif prob < 0.75:
+            elif prob < 0.9:
                 new_board.append(par2.board[row])
             else:
                 new_board.append(self.mutate_col())
